@@ -70,7 +70,7 @@ Overall, the script does this:
 1. Creates a temporary PowerShell script that just prints a message.
 2. Base64-encodes the path to that script (not the script content itself).
 3. Launches PowerShell with ```-EncodedCommand```, passing the encoded script path — mimicking how attackers obfuscate commands.
-4. Waits 3 seconds, then deletes the script, simulating cleanup or anti-forensics. _Note: the script ```temp_script.ps1``` was logged in Defender most likely because the files creation and deletion was too fast._
+4. Waits 3 seconds, then deletes the script, simulating cleanup or anti-forensics. _Note: the script ```temp_script.ps1``` was not logged in Defender most likely because the file creation and deletion was too fast._
 
 
 3. Afterwards, I check for any network activity using a very basic query:
