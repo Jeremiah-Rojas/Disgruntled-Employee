@@ -51,7 +51,9 @@ DeviceFileEvents
 ```
 The following events results were displayed:
 <img width="1630" height="267" alt="image" src="https://github.com/user-attachments/assets/8c4a39b9-99f9-49b8-aea0-51d37fa71adf" />
-These results confirm that a powershell script was created called ```windows.ps1```.
+These results confirm that a powershell script was created called ```windows.ps1```. Looking more into the specific event, I found that the script was created/run with Powershell ISE:
+<img width="1631" height="300" alt="image" src="https://github.com/user-attachments/assets/770940f0-61aa-40fe-9a54-f43085478ab2" />
+
 
 
 2. Next, I searched for any commands that may have been run outside the script; whether from the command prompt or powershell:
@@ -62,37 +64,28 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-No results were returned indicating that the user may not have run any outside commands.
+No results were returned indicating that the user may not have run any outside commands. Knowing that the script ```windows.ps1``` was downloaded, I went to the suspect computer and manually looked for the file and found the following:
+<img width="1607" height="919" alt="image" src="https://github.com/user-attachments/assets/c92a8cd3-555f-4a6d-b1b0-ecd4a1b66b98" />
+Overall, the script does this: 
+1. Creates a temporary PowerShell script that just prints a message.
+2. Base64-encodes the path to that script (not the script content itself).
+3. Launches PowerShell with ```-EncodedCommand```, passing the encoded script path — mimicking how attackers obfuscate commands.
+4. Waits 3 seconds, then deletes the script, simulating cleanup or anti-forensics.
 
-3. I then searched for any commands run on the system using the following query. _Note: I excluded all "exe" commands to simplify the threat hunting process since all of the "exe" commands were from the nature of the cyber range._ :
+
+3. Afterwards, I check for any network activity using a very basic query:
 ```kql
-DeviceProcessEvents
+DeviceNetworkEvents
 | where DeviceName == "rojas-mde"
-| project Timestamp, DeviceName, ProcessCommandLine
-| where ProcessCommandLine !contains "exe"
 | order by Timestamp desc
 ```
-The following events were displayed:
-<img width="1004" height="617" alt="image" src="https://github.com/user-attachments/assets/c3a2c5ae-73b6-499a-9a7a-430ee39bc48e" />
-The commands run by the user are:
-</br>```netsh advfirewall firewall show rule name=all```: This command displays the firewall rules
-</br>```netstat -a```: This command displays all active network connections and listening ports on the system.
-</br>```ipconfig /all```: This command displays a lot of information about the network's configuration including: host IP address, host MAC address, subnet mask, DHCP configuration, DNS server, default gateway, etc.
-</br>```ipconfig /displaydns```: Displays recently resolved domain names and their associated IP addresses (essentially showing previously visited websites).
-</br>```hostname```: Displays the name of the computer.
-</br>```whoami```: Displays the username of the computer.
-</br>```whoami /groups```: Lists all the security groups that the user belongs to, along with associated attributes and privilege levels.
-</br>```net session```: Displays active SMB (Server Message Block) file sharing sessions on the computer.
-</br>```net1 session```: Displays the same information as ```net session``` but is more compatible with legacy systems or programs.
-
-</br>Overall, the user did not exactly do anything malicious, but the series of commands they ran strongly indicate that they were attempting to gain information about the host machine and network. 
+No events related to the lab were displayed so I concluded that the only thing the user did was run the script.
 
 ---
 
 ## Chronological Events
 
-1. The user successfully logged in with compromised credentials
-2. The user ran a series of commands to gain technical details of a computer and the network
+1. The user ran a script that 
 
 ---
 
