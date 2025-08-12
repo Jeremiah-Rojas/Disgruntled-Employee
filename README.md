@@ -11,52 +11,58 @@ Due to recent poor activity, a certain employee was fired. However, since his ab
 
 ## IoC Discovery Plan:
 1. Check DeviceFileEvents for any malicious downloads
-3. Check DeviceProcessEvents to view any commands run
+2. Check DeviceProcessEvents to view any commands run
+3. Check DeviceNetworkEvents for any outbound connections to malicious services
 
 ---
 ## Steps Taken by Bad Actor
-1. Logon successfully into machine (credentials compromised via social engineering)
-2. Run series of commands to gain information about host machine and network
-3. Restart the machine in a futile attempt to erase anything that may have been logged
+1. Run a script designed to negatively impact the machine. For reference, the script is show below:
+```
+# Simulated Red Team Test Script - Benign
+# Author: You (for training/testing purposes)
+
+# Step 1: Create a temporary script file
+$tempScript = "$env:TEMP\temp_script.ps1"
+"Write-Host 'Hello from the test script'" | Out-File -FilePath $tempScript -Encoding ASCII
+
+# Step 2: Base64-encode the script path (like an attacker might do)
+$bytes = [System.Text.Encoding]::Unicode.GetBytes($tempScript)
+$encodedCommand = [Convert]::ToBase64String($bytes)
+
+# Step 3: Launch PowerShell with -EncodedCommand (simulated obfuscation)
+Start-Process -FilePath "powershell.exe" -ArgumentList "-EncodedCommand $encodedCommand"
+
+# Step 4: Wait briefly, then clean up
+Start-Sleep -Seconds 3
+Remove-Item -Path $tempScript -Force
+```
+_Note: You the cybersecurity analyst do not know the this is the script that was run._
+
 ---
 
 ## Steps Taken
 
-1. First look for logon events using the following query (I narrowed down the results by entering in the DeviceName):
+1. First look for any malicious downloads or scripts:
 ```kql
-DeviceLogonEvents
+DeviceFileEvents
 | where DeviceName == "rojas-mde"
+| where FileName contains ".ps1"
 | order by Timestamp desc
 ```
 The following events results were displayed:
-<img width="1639" height="328" alt="image" src="https://github.com/user-attachments/assets/82d87d6e-ab4b-4f89-a6f8-fde2e76fffd2" />
-Interestingly, there were no failed logon attempts which means that somehow this individual was able to gain valid credentials without having to brute force them.
+<img width="1630" height="267" alt="image" src="https://github.com/user-attachments/assets/8c4a39b9-99f9-49b8-aea0-51d37fa71adf" />
+These results confirm that a powershell script was created called ```windows.ps1```.
 
 
-2. I checked individually for new files, modified files, and deleted files using the following queries. _Note: When I ran these queries, results were returned due to the environment of the Cyber Range (things like system checks are logged), however, I am excluding them because they are not relevant to the threat hunt._ :
-</br>New Files
+2. Next, I searched for any commands that may have been run outside the script; whether from the command prompt or powershell:
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where DeviceName == "rojas-mde"
-| where ActionType == "FileCreated"
-| order by Timestamp desc
-```
-</br>Modified Files
-```kql
-DeviceFileEvents
-| where DeviceName == "rojas-mde"
-| where ActionType == "FileDeleted"
-| order by Timestamp desc
-```
-</br>Deleted Files
-```kql
-DeviceFileEvents
-| where DeviceName == "rojas-mde"
-| where ActionType == "FileModified"
+| where ProcessCommandLine !contains "exe"
 | order by Timestamp desc
 ```
 
-No results were returned indicating that the user did not in anyway tamper with the system files.
+No results were returned indicating that the user may not have run any outside commands.
 
 3. I then searched for any commands run on the system using the following query. _Note: I excluded all "exe" commands to simplify the threat hunting process since all of the "exe" commands were from the nature of the cyber range._ :
 ```kql
