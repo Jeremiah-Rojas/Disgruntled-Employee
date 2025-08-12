@@ -70,7 +70,7 @@ Overall, the script does this:
 1. Creates a temporary PowerShell script that just prints a message.
 2. Base64-encodes the path to that script (not the script content itself).
 3. Launches PowerShell with ```-EncodedCommand```, passing the encoded script path — mimicking how attackers obfuscate commands.
-4. Waits 3 seconds, then deletes the script, simulating cleanup or anti-forensics.
+4. Waits 3 seconds, then deletes the script, simulating cleanup or anti-forensics. _Note: the script ```temp_script.ps1``` was logged in Defender most likely because the files creation and deletion was too fast._
 
 
 3. Afterwards, I check for any network activity using a very basic query:
@@ -85,29 +85,29 @@ No events related to the lab were displayed so I concluded that the only thing t
 
 ## Chronological Events
 
-1. The user ran a script that 
+1. The user ran a script that created a sub-script which then executed causing damage to the system and then deleted itself. _Note: This script in itself is being and did not damage to the system._
 
 ---
 
 ## Summary
 
-An unauthorized individual gained entry into the company facility and it is thought that through a social engineering effort, stole a valid user’s credentials in which he used to login into the machine ```rojas-mde```, and then acquired various details about the network. The individual then left and has not returned since.
+A disgruntled employee ran a malicious script on the machine ```rojas-mde``` before leaving the company as a result of being fired. The event was contained and no lasting damage was done.
 
 ---
 
 ## Response Taken
-The compromised machine ```rojas-mde```, was isolated and an antivirus scan was run. The credentials for the machine were changed and a social engineering info session was scheduled in order to prevent further breaches. Security analysts were notified of the breach in order to closely monitor any attempt of unauthorized access to company resources since the malicious actor was able to gain valid information; however, without network access, their efforts to compromise company security remains restricted.
+The compromised machine ```rojas-mde```, was isolated and an antivirus scan was run. Since this event, the IT adminstrators have implemented and enforced a "No script execution" policy for non-admins in order to prevent a malicious script from being run in the future.
 
 ---
 
 ## Created By:
 - **Author Name**: Jeremiah Rojas
 - **Author Contact**: https://www.linkedin.com/in/jeremiah-rojas-2425532b3
-- **Date**: August 8, 2025
+- **Date**: August 12, 2025
 
 ---
 
 ## Revision History:
 | **Version** | **Changes**                   | **Date**         | **Modified By**   |
 |-------------|-------------------------------|------------------|-------------------|
-| 1.0         | Initial draft                  | `August 8, 2025`  | `Jeremiah Rojas`   
+| 1.0         | Initial draft                  | `August 12, 2025`  | `Jeremiah Rojas`   
