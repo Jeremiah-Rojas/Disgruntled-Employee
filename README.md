@@ -1,17 +1,16 @@
 # Disgruntled-Employee
 
 ## Example Scenario
-Through a social engineering attack, a user was able to gain access to a certain part of the facility. During this time he accessed one of the company computers and was seen interacting with the machine. The security administrators have tasked you to figure out what this individual was doing and if the computer's integrity was compromised in anyway.
+Due to recent poor activity, a certain employee was fired. However, since his absence, the computer he used to work with is now acting odd and you believe this is some sort of act of revenge. It is thought that he may have run a script of some sort since there are no rgulations concerning scripts for that particular computer. You job is to figure out what damage the script did the machine.
 
 ## Tools Utilized
-- Powershell
+- Powershell ISE
 - Microsoft Defender (KQL)
 
 ---
 
 ## IoC Discovery Plan:
-1. Check DeviceLogonEvents for any signs of brute force attempts
-2. Check DeviceFileEvents for any new files or deleted files
+1. Check DeviceFileEvents for any malicious downloads
 3. Check DeviceProcessEvents to view any commands run
 
 ---
