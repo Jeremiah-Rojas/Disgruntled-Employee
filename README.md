@@ -85,7 +85,7 @@ No events related to the lab were displayed so I concluded that the only thing t
 
 ## Chronological Events
 
-1. The user ran a script that created a sub-script which then executed causing damage to the system and then deleted itself. _Note: This script in itself is being and did not damage to the system._
+1. The user ran a script that created a sub-script which then executed causing damage to the system and then deleted itself. _Note: This script in itself is benign and did not damage to the system._
 
 ---
 
