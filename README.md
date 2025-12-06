@@ -1,7 +1,7 @@
 # Disgruntled-Employee
 
 ## Example Scenario
-Due to recent poor activity, a certain employee was fired. However, since his absence, the computer he used to work with is now acting odd and you believe this is some sort of act of revenge. It is thought that he may have run a script of some sort since there are no rgulations concerning scripts for that particular computer. You job is to figure out what damage the script did the machine.
+Due to recent poor activity, a certain employee was fired. However, since his absence, the computer he used to work with is now acting odd and you believe this is some sort of act of revenge. It is thought that he may have run a script of some sort since there are no policies concerning scripts for that particular computer. Your job is to figure out what damage the script did to the machine.
 
 ## Tools Utilized
 - Powershell ISE
