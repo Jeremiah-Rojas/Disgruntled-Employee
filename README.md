@@ -83,15 +83,9 @@ No events related to the lab were displayed so I concluded that the only thing t
 
 ---
 
-## Chronological Events
-
-1. 
-
----
-
 ## Summary
 
-A disgruntled employee ran a malicious script on the machine ```rojas-mde``` before leaving the company as a result of being fired. The user ran a script (windows.ps1) that created a sub-script (temp.ps1) which then executed causing damage to the system and then deleted itself. _Note: This script in itself is benign and did not damage to the system._ The event was contained and no lasting damage was done.
+A disgruntled employee ran a malicious script on the machine ```rojas-mde``` before leaving the company as a result of being fired. The user ran a script (windows.ps1) that created a sub-script (temp_script.ps1) which then executed causing damage to the system and then deleted itself. _Note: This script in itself is benign and did not damage to the system._ The event was contained and no lasting damage was done.
 
 ---
 
